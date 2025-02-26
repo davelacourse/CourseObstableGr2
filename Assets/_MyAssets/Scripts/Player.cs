@@ -2,31 +2,61 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
+    private const string IS_WALKING = "isWalking";
+    
     [SerializeField] private float _playerSpeed = 10f;
     [SerializeField] private float _rotationSpeed = 1000f; // vitesse de rotation du joueur
 
-    private void Update()
+    private Animator _animator;
+    private PlayerInputActions _playerInputActions;
+    private Rigidbody _rb;
+
+    private void Awake()
+    {
+        _playerInputActions = new PlayerInputActions();  // Instancie un objet de type PlayerInputActions
+        _playerInputActions.Player.Enable();  // Active l'action Map "Player"
+    }
+
+    private void Start()
+    {
+        _animator = GetComponentInChildren<Animator>();
+        _rb = GetComponent<Rigidbody>();
+    }
+
+    private void FixedUpdate()
     {
         PlayerMouvements();
     }
 
     private void PlayerMouvements()
     {
-        float dirX = Input.GetAxis("Horizontal");
-        float dirZ = Input.GetAxis("Vertical");
+        // **Ancien Input Manager
+        //float dirX = Input.GetAxis("Horizontal");
+        //float dirZ = Input.GetAxis("Vertical");
+        //Vector3 direction = new Vector3(dirX, 0f, dirZ);
 
-        Vector3 direction = new Vector3(dirX, 0f, dirZ);
+        Vector2 direction2D = _playerInputActions.Player.Move.ReadValue<Vector2>();
+        Vector3 direction = new Vector3(direction2D.x, 0f, direction2D.y);
 
         // Normalise mon vecteur à une valeur maximale de 1
         direction = direction.normalized;
 
-        transform.Translate(direction * Time.deltaTime * _playerSpeed, Space.World);
+        
+        // Déplacement par téléportation du transform
+        //transform.Translate(direction * Time.deltaTime * _playerSpeed, Space.World);
+
+        _rb.linearVelocity = direction * Time.fixedDeltaTime * _playerSpeed;
 
         if (direction != Vector3.zero)
         {
             Quaternion toRotation = Quaternion.LookRotation(direction, Vector3.up);
             transform.rotation =
                 Quaternion.RotateTowards(transform.rotation, toRotation, _rotationSpeed * Time.deltaTime);
+            _animator.SetBool(IS_WALKING, true);
+        }
+        else
+        {
+            _animator.SetBool(IS_WALKING, false);
         }
     }
 }

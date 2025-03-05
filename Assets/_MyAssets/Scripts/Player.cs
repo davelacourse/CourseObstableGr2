@@ -46,10 +46,10 @@ public class Player : MonoBehaviour
         //transform.Translate(direction * Time.deltaTime * _playerSpeed, Space.World);
 
         // Donne une vitesse au corps physique dans la direction vecteur
-        _rb.linearVelocity = direction * Time.fixedDeltaTime * _playerSpeed;
+        //_rb.linearVelocity = direction * Time.fixedDeltaTime * _playerSpeed;
 
         //Appliquer une force sur l'objet dans la direction du vecteur
-        //_rb.AddForce(direction * Time.fixedDeltaTime * _playerSpeed);
+        _rb.AddForce(direction * Time.fixedDeltaTime * _playerSpeed);
 
         if (direction != Vector3.zero)
         {

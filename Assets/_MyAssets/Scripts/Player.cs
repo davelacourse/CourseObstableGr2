@@ -23,6 +23,12 @@ public class Player : MonoBehaviour
         _rb = GetComponent<Rigidbody>();
     }
 
+    private void OnDestroy()
+    {
+        //S'assure d'arrête la souscription à l'action Player quand le joueur est détruit
+        _playerInputActions.Player.Disable();
+    }
+
     private void FixedUpdate()
     {
         PlayerMouvements();

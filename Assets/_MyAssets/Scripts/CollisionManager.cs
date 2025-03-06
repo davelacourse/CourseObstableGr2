@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class CollisionManager : MonoBehaviour
 {
@@ -19,8 +20,20 @@ public class CollisionManager : MonoBehaviour
             }
             else if (this.gameObject.tag == "End" && !_isHit)
             {
-                Debug.Log("Fin partie !!! Hit(s)=" + GameManager.Instance.Score);
-                collision.gameObject.SetActive(false); // Déastive le joueur sur la scène
+                int noScene = SceneManager.GetActiveScene().buildIndex;
+                // Teste si l'on est sur la dernière scène
+                if (noScene == SceneManager.sceneCountInBuildSettings - 1)
+                {
+
+                    GameManager.Instance.FinPartie();
+                    collision.gameObject.SetActive(false); // Déastive le joueur sur la scène
+                }
+                else
+                {
+                    GameManager.Instance.SetNiveau1(Time.time);
+                    SceneManager.LoadScene(noScene + 1);
+                }
+                
             }
         }
     }

@@ -2,14 +2,16 @@ using UnityEngine;
 using TMPro;
 using UnityEngine.SceneManagement;
 using UnityEngine.InputSystem;
+using UnityEngine.EventSystems;
 
-public class UIManager : MonoBehaviour
+public class UIManager : UI
 {
     [SerializeField] private TMP_Text _txtTemps = default(TMP_Text);
     [SerializeField] private TMP_Text _txtCollisions = default(TMP_Text);
     [SerializeField] private GameObject _panelPause = default(GameObject);
+    [SerializeField] private GameObject _boutonContinuer = default(GameObject);
 
-    
+
     private bool _enPause = false;
     private PlayerInputActions _playerInputActions;
 
@@ -70,20 +72,6 @@ public class UIManager : MonoBehaviour
         _txtCollisions.text = "Collisions : " + p_pointage.ToString();
     }
 
-    public void Quitter()
-    {
-#if UNITY_EDITOR
-        UnityEditor.EditorApplication.isPlaying = false;
-#else
-        Application.Quit();
-#endif
-    }
-
-    public void RetourDebut()
-    {
-        SceneManager.LoadScene(0);
-    }
-
     public void TogglePause()
     {
         _panelPause.SetActive(!_panelPause.activeSelf);
@@ -96,6 +84,9 @@ public class UIManager : MonoBehaviour
         {
             Time.timeScale = 0f;
             _enPause = true;
+            EventSystem.current.SetSelectedGameObject(null);
+            EventSystem.current.SetSelectedGameObject(_boutonContinuer);
+            
         }
     }
 }

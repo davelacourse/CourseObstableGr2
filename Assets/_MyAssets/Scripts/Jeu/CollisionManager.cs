@@ -20,19 +20,12 @@ public class CollisionManager : MonoBehaviour
             }
             else if (this.gameObject.tag == "End" && !_isHit)
             {
-                GameManager.Instance.SetNiveau(Time.time);
-                
                 int noScene = SceneManager.GetActiveScene().buildIndex;
-                // Teste si l'on est sur la dernière scène
-                if (noScene == SceneManager.sceneCountInBuildSettings - 1)
+                if (noScene == SceneManager.sceneCountInBuildSettings - 2)
                 {
-                    GameManager.Instance.FinPartie();
-                    collision.gameObject.SetActive(false); // Déastive le joueur sur la scène
+                    GameManager.Instance.SetNiveau(Time.time);
                 }
-                else
-                {
-                    SceneManager.LoadScene(noScene + 1);
-                }
+                SceneManager.LoadScene(noScene + 1);
             }
         }
     }
